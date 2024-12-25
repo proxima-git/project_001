@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  project_001:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: project_001
+    volumes:
+      - ~/.uploads/images/flask-yt:/app/app/static/upload
+    env_file:
+      - .env
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DB=${MYSQL_DB}
+    ports:
+      - '8080:8080'

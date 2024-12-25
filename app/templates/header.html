@@ -1,0 +1,21 @@
+<header class="p-3 text-bg-dark">
+  <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+  
+    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+      <li class="nav-item"><a href="{{ url_for('main.home') }}" class="nav-link px-2">Home</a></li>
+      <li class="nav-item"><a href="{{ url_for('main.about') }}" class="nav-item nav-link px-2">About</a></li>
+    </ul>
+
+    <div class="text-end">
+      {% if current_user.is_authenticated %}
+        <span>Welcome, {{current_user.login}}!</span>
+        <img class="rounded-circle" src="{{ url_for('static', filename='upload/' + current_user.avatar)}}" width="48"  height="48">
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light me-2">Logout</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light me-2">Login</a>
+        <a href="{{ url_for('auth.sign_up') }}" class="btn btn-warning">Sign-up</a>
+      {% endif %}
+    </div>
+
+  </div>
+</header>

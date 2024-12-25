@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h3 align="center">Authorization</h3>
+    <form method="POST" enctype="multipart/form-data" class="form-control d-flex flex flex-column gap-2">
+        {{ form.csrf_token }}
+        {{ form.login(class="form-control", placeholder="Login") }}
+        {{ form.password(class="form-control", placeholder="Password") }}
+        <div class="d-flex flex-row gap-2">
+            {{ form.remember.label }}{{ form.remember(class='form-check') }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+{% endblock %}
