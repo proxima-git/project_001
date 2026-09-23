@@ -1,24 +1,30 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Deploy to staging
+
+on:
+  push:
+    branches: [ staging ]
+  workflow_dispatch:
+
 jobs:
-  Explore-GitHub-Actions:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup SSH key
         run: |
-          install -d -m 700 ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/deploy_key"
+          chmod 600 "$HOME/.ssh/deploy_key"
+          ssh-keyscan -T 20 -p "${{ secrets.SSH_PORT }}" -H "${{ secrets.SSH_HOST }}" > "$HOME/.ssh/known_hosts"
 
       - name: Deploy via SSH
         run: |
-          ssh -i ~/.ssh/deploy_key \
-              -p ${{ secrets.SSH_PORT }} \
-              -o StrictHostKeyChecking=no \
-              ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
-              "cd ${{ secrets.SSH_DEPLOY_DIR }} && git pull origin main"
-
+          ssh -i "$HOME/.ssh/deploy_key" \
+              -p "${{ secrets.SSH_PORT }}" \
+              -o StrictHostKeyChecking=yes \
+              -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+              "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" \
+              "cd '${{ secrets.SSH_DEPLOY_DIR }}' && git pull origin main"
